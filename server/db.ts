@@ -1,7 +1,8 @@
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { ArtifactRef, InsertUser, NewOceanRun, PipelineConfig, artifactRefs, pipelineConfigs, oceanRuns, thresholdAlerts, users } from "../drizzle/schema";
+import { ArtifactRef, InsertUser, NewOceanRun, PipelineConfig, artifactRefs, oceanRunPayloads, pipelineConfigs, oceanRuns, qaTraces, thresholdAlerts, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { summarizePersistedRun } from "./persistedRun";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -116,6 +117,19 @@ export async function getOceanRunById(id: string) {
   const db = await getDb();
   if (!db) return undefined;
   return (await db.select().from(oceanRuns).where(eq(oceanRuns.id, id)).limit(1))[0];
+}
+
+export async function getLatestPersistedOceanRun() {
+  const db = await getDb();
+  if (!db) return undefined;
+  const run = (await db.select().from(oceanRuns).where(eq(oceanRuns.status, "completed")).orderBy(desc(oceanRuns.completedAt)).limit(1))[0];
+  if (!run) return undefined;
+  const [artifacts, traces, payload] = await Promise.all([
+    db.select().from(artifactRefs).where(eq(artifactRefs.runId, run.id)),
+    db.select().from(qaTraces).where(eq(qaTraces.runId, run.id)),
+    db.select().from(oceanRunPayloads).where(eq(oceanRunPayloads.runId, run.id)).limit(1),
+  ]);
+  return { ...summarizePersistedRun(run, artifacts, traces), payload: payload[0] ?? null };
 }
 
 export async function createOceanRunIfAbsent(run: NewOceanRun): Promise<{ created: boolean; runId: string }> {

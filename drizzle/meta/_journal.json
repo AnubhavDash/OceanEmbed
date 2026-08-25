@@ -22,6 +22,20 @@
       "when": 1787679812626,
       "tag": "0002_wonderful_menace",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1787683841737,
+      "tag": "0003_wet_vapor",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1787684557452,
+      "tag": "0004_chemical_pepper_potts",
+      "breakpoints": true
     }
   ]
 }

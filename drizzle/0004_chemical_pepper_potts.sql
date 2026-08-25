@@ -1,0 +1,1 @@
+ALTER TABLE `ocean_run_payloads` ADD `display` json NOT NULL;

@@ -14,15 +14,20 @@
 - [x] Add evidence-linked owner-alert composition and delivery primitives.
 - [x] Apply elegant, accessible visual design with explicit confidence/risk labels and human-review safeguards.
 - [x] Add and run Vitest coverage for domain calculations, conservative decision paths, QA-action selection, artifact integrity, and notification payloads.
-- [ ] Implement real OpenCV preprocessing against approved data and persist generated masks, fronts, tiles, and QA metrics.
-- [ ] Connect an evaluated 15-depth model endpoint and persist actual reconstruction, uncertainty, and fallback outputs.
-- [ ] Replace reference scenes with persisted runs and data-driven map overlays in all dashboard views.
-- [ ] Compute held-out Argo collocations and validation statistics from independently sourced profiles.
-- [ ] Wire QA actions, artifact persistence, threshold detection, and owner notification delivery into the completed run workflow.
+- [x] Implement real OpenCV preprocessing against approved data and persist generated masks, fronts, tiles, and QA metrics.
+- [ ] Connect a production SageMaker endpoint for the evaluated 15-depth model; the reproducible public baseline is currently persisted and displayed.
+- [x] Render the dashboard, validation explorer, and QA console from the persisted baseline payload rather than the static client dataset.
+- [x] Compute an independently held-out Argo illustrative collocation with depth-band statistics; expand to a multi-profile benchmark before production use.
+- [x] Execute the curated-run materialization, QA escalation, immutable-artifact persistence, and pending evidence-linked alert workflow through server code.
 - [ ] Add integration tests for scheduled-refresh idempotency and threshold-triggered delivery.
-- [ ] Verify responsive visual behavior, run quality checks, and save a completed project checkpoint.
+- [x] Verify responsive visual behavior and run quality checks for the persisted operations, preprocessing, validation, QA, and reproducibility views.
+- [ ] Save a completed project checkpoint.
 - [x] Acquire a rights-cleared historical North Indian Ocean scene with documented source, date, bounds, variables, and checksum.
 - [x] Run the curated scene through actual OpenCV 5 processing and publish real mask, inpainting, front, tile, metric, and manifest artifacts as durable web assets.
 - [x] Generate, publish, and display a real 4×4 tile-coverage artifact from the curated OpenCV run.
-- [ ] Load actual curated reconstruction/uncertainty outputs and Argo validation extracts into the application’s persisted run model.
-- [ ] Execute the bounded QA and alert workflow against the curated run, preserving evidence and trace references without issuing a live owner alert.
+- [x] Load actual persisted reconstruction/uncertainty outputs and Argo validation extracts through a typed server payload.
+- [x] Execute the bounded QA and pending-alert workflow against the curated run through an idempotent server action without issuing a live owner alert.
+- [x] Build a reproducible public-data climatology-residual baseline from an explicitly documented historical train/validation/test split.
+- [x] Compute and calibrate baseline uncertainty from held-out residuals without using evaluation Argo records as inference inputs.
+- [x] Package the baseline model, run manifest, evaluation report, and calibrated curated-scene prediction as immutable artifacts.
+- [x] Integrate the evaluated baseline output as the database-backed single source of truth for the dashboard state.

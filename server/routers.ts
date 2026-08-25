@@ -1,7 +1,9 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, router } from "./_core/trpc";
+import { getLatestPersistedOceanRun } from "./db";
+import { materializeCuratedBaseline } from "./materializeBaseline";
 import { getReferenceScene } from "./oceanembed";
 
 export const appRouter = router({
@@ -21,6 +23,8 @@ export const appRouter = router({
   oceanembed: router({
     /** A clearly marked reference fixture used to exercise the product UI before data credentials are configured. */
     referenceScene: publicProcedure.query(() => getReferenceScene()),
+    persistedLatest: publicProcedure.query(() => getLatestPersistedOceanRun()),
+    materializeCuratedBaseline: adminProcedure.mutation(() => materializeCuratedBaseline()),
   }),
 
 });

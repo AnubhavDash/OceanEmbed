@@ -127,6 +127,22 @@ export const monitoredRegions = mysqlTable("monitored_regions", {
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
+/** Small, UI-ready summaries for a completed run; raw source and artifact bytes stay in object storage. */
+export const oceanRunPayloads = mysqlTable("ocean_run_payloads", {
+  id: varchar("id", { length: 64 }).primaryKey(),
+  runId: varchar("run_id", { length: 64 }).notNull().unique(),
+  reconstructionProfile: json("reconstruction_profile").notNull(),
+  uncertaintyProfile: json("uncertainty_profile").notNull(),
+  decision: json("decision").notNull(),
+  validationSummary: json("validation_summary").notNull(),
+  qaSnapshot: json("qa_snapshot").notNull(),
+  display: json("display").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+}, table => [
+  index("ocean_run_payloads_run_idx").on(table.runId),
+]);
+
 /** Delivery and evidence metadata for every owner-facing threshold notification. */
 export const thresholdAlerts = mysqlTable("threshold_alerts", {
   id: varchar("id", { length: 64 }).primaryKey(),
@@ -148,6 +164,7 @@ export type OceanRun = typeof oceanRuns.$inferSelect;
 export type NewOceanRun = typeof oceanRuns.$inferInsert;
 export type PipelineConfig = typeof pipelineConfigs.$inferSelect;
 export type ArtifactRef = typeof artifactRefs.$inferSelect;
+export type OceanRunPayload = typeof oceanRunPayloads.$inferSelect;
 export type QaTrace = typeof qaTraces.$inferSelect;
 export type ArgoCollocation = typeof argoCollocations.$inferSelect;
 export type MonitoredRegion = typeof monitoredRegions.$inferSelect;
