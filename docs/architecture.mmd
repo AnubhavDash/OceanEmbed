@@ -1,0 +1,15 @@
+flowchart LR
+  A[Approved satellite surface observations] --> B[OpenCV 5 preprocessing worker]
+  B --> C[Immutable object storage: source subsets, masks, fronts, tiles]
+  C --> D[SageMaker Serverless Inference: climatology-residual model]
+  D --> E[Derived 26°C depth, OHC, mixed-layer proxy, uncertainty]
+  E --> F[Agentic QA: OpenCV evidence → bounded action]
+  F --> G[Object storage evidence bundle + durable QA trace]
+  G --> H[Operations dashboard]
+  G --> I[Evidence-linked owner notification]
+  J[Held-out Argo profiles] --> K[Collocation & validation metrics]
+  K --> H
+  K --> G
+  L[Daily authenticated scheduler] --> A
+  L --> D
+  L --> F

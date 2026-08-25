@@ -1,0 +1,23 @@
+# Project TODO
+
+- [x] Build a polished North Indian Ocean reference-interface dashboard with date, depth, region, and layer controls.
+- [x] Render labelled reference overlays for predicted subsurface temperature, uncertainty, cloud coverage, SST fronts, and 26°C-isotherm depth.
+- [x] Implement a reference OpenCV 5 preprocessing workspace with inspectable mask, inpainting, front, tile, and quality-metric presentation.
+- [x] Implement decision-domain calculations for a 15-depth climatology-residual profile, uncertainty labels, and conservative fallback metadata.
+- [x] Derive and display reference cyclone heat-fuel decision indicators: 26°C-isotherm depth, ocean heat content, mixed-layer proxy, confidence, and calibrated risk labels.
+- [x] Build a reference Argo validation explorer with profile comparisons, depth-band metrics, and baseline presentation.
+- [x] Build a reference Agentic Vision QA console with a trace ledger, bounded action policy, and before/after presentation.
+- [x] Add object-storage metadata schema and immutable-artifact persistence helpers without database blobs.
+- [x] Add AWS-ready configuration and documentation for S3 object references, SageMaker Serverless Inference, Lambda/API orchestration, CloudWatch-compatible traces, pinned OpenCV 5 dependencies, and one-command Docker setup.
+- [x] Add architecture diagram, data/model provenance, limitations, responsible-use guardrails, demo scenario, setup guide, and evaluation instructions for competition submission.
+- [ ] Add a daily scheduled scene-refresh workflow with idempotent execution, provenance logging, and a current-scene update path.
+- [x] Add evidence-linked owner-alert composition and delivery primitives.
+- [x] Apply elegant, accessible visual design with explicit confidence/risk labels and human-review safeguards.
+- [x] Add and run Vitest coverage for domain calculations, conservative decision paths, QA-action selection, artifact integrity, and notification payloads.
+- [ ] Implement real OpenCV preprocessing against approved data and persist generated masks, fronts, tiles, and QA metrics.
+- [ ] Connect an evaluated 15-depth model endpoint and persist actual reconstruction, uncertainty, and fallback outputs.
+- [ ] Replace reference scenes with persisted runs and data-driven map overlays in all dashboard views.
+- [ ] Compute held-out Argo collocations and validation statistics from independently sourced profiles.
+- [ ] Wire QA actions, artifact persistence, threshold detection, and owner notification delivery into the completed run workflow.
+- [ ] Add integration tests for scheduled-refresh idempotency and threshold-triggered delivery.
+- [ ] Verify responsive visual behavior, run quality checks, and save a completed project checkpoint.

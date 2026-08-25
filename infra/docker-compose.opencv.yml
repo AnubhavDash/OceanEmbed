@@ -1,0 +1,7 @@
+services:
+  opencv-worker:
+    build:
+      context: ./opencv-worker
+      args:
+        OPENCV_VERSION: "5.0.0"
+    image: oceanembed-opencv-worker:5.0.0

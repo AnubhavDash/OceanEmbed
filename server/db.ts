@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { ArtifactRef, InsertUser, NewOceanRun, PipelineConfig, artifactRefs, pipelineConfigs, oceanRuns, thresholdAlerts, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,52 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+export const DEFAULT_PIPELINE_CONFIG_ID = "north-indian-ocean-daily";
+
+export async function ensureNorthIndianOceanPipelineConfig(): Promise<PipelineConfig | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  await db.insert(pipelineConfigs).values({
+    id: DEFAULT_PIPELINE_CONFIG_ID,
+    name: "North Indian Ocean daily scene refresh",
+    regionName: "North Indian Ocean",
+    cronExpression: "0 30 3 * * *",
+    enabled: 0,
+    dataSourceStatus: "unconfigured",
+    modelEndpointStatus: "unconfigured",
+  }).onDuplicateKeyUpdate({ set: { updatedAt: new Date() } });
+  return (await db.select().from(pipelineConfigs).where(eq(pipelineConfigs.id, DEFAULT_PIPELINE_CONFIG_ID)).limit(1))[0];
+}
+
+export async function getPipelineConfigByTaskUid(taskUid: string): Promise<PipelineConfig | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  return (await db.select().from(pipelineConfigs).where(eq(pipelineConfigs.scheduleCronTaskUid, taskUid)).limit(1))[0];
+}
+
+export async function getOceanRunById(id: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return (await db.select().from(oceanRuns).where(eq(oceanRuns.id, id)).limit(1))[0];
+}
+
+export async function createOceanRunIfAbsent(run: NewOceanRun): Promise<{ created: boolean; runId: string }> {
+  const db = await getDb();
+  if (!db) throw new Error("Database is unavailable; scheduled run cannot be made durable.");
+  const existing = (await db.select().from(oceanRuns).where(and(eq(oceanRuns.id, run.id), eq(oceanRuns.regionName, run.regionName))).limit(1))[0];
+  if (existing) return { created: false, runId: existing.id };
+  await db.insert(oceanRuns).values(run);
+  return { created: true, runId: run.id };
+}
+
+export async function recordArtifactRef(input: Omit<ArtifactRef, "createdAt">): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database is unavailable; artifact reference cannot be made durable.");
+  await db.insert(artifactRefs).values(input);
+}
+
+export async function recordThresholdAlert(input: typeof thresholdAlerts.$inferInsert): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database is unavailable; alert delivery cannot be made durable.");
+  await db.insert(thresholdAlerts).values(input);
+}
