@@ -1,0 +1,66 @@
+export const CURATED_SCENE = {
+  notice: "Curated historical scene · 1 Aug 2025 · NOAA OISST, NOAA ERDDAP Argo, HYCOM comparator. OpenCV 5.0.0 processed these assets. This is not live data or an OceanEmbed model forecast.",
+  run: {
+    id: "curated-nio-2025-08-01",
+    asOf: "2025-08-01T12:00:00Z",
+    region: "Bay of Bengal · 10–20°N, 80–90°E",
+    modelVersion: "No OceanEmbed model endpoint connected",
+    sourceManifest: "/manus-storage/curated_scene_0b5ec51d.json",
+    status: "Curated historical scene",
+    coverageFraction: 0.8525,
+  },
+  decision: {
+    isotherm26DepthM: 78.34,
+    oceanHeatContentKjCm2: 73.1,
+    mixedLayerProxyM: 50,
+    confidence: "insufficient",
+    fallbackMode: "human_review",
+    risk: "withhold",
+    rationale: "Derived from a HYCOM comparator without a calibrated OceanEmbed uncertainty head. Automated heat-fuel classification is withheld; expert review is required.",
+  },
+  profile: [
+    [0, 29.078], [10, 28.828], [20, 28.681], [30, 28.641], [50, 28.521], [75, 26.486], [100, 22.848], [125, 19.916], [150, 17.53], [200, 13.998], [300, 11.604], [500, 9.847], [700, 8.466], [850, 7.534], [1000, 6.653],
+  ].map(([depthM, temperatureC]) => ({ depthM, temperatureC })),
+  validation: {
+    floatId: "NOAA ERDDAP Argo profile · 103 raw levels",
+    observedAt: "2025-08-01T14:21:47Z",
+    predicted: [],
+    observed: [
+      [0, 29.771], [10, 29.6545], [20, 29.4715], [30, 29.3815], [50, 29.1484], [75, 26.3901], [100, 23.1504], [125, 20.0726], [150, 18.0776], [200, 14.6951], [300, 12.0872], [500, 10.2377], [700, 8.6585], [850, 7.7602], [1000, 6.8919],
+    ].map(([depthM, temperatureC]) => ({ depthM, temperatureC })),
+    metrics: [
+      { band: "0–30 m", rmse: 0.7643, bias: -0.7626, correlation: 0.958, baselineRmse: null },
+      { band: "50–200 m", rmse: 0.4663, bias: -0.3725, correlation: 0.9986, baselineRmse: null },
+      { band: "300–1000 m", rmse: 0.326, bias: -0.3063, correlation: 0.9996, baselineRmse: null },
+    ],
+    caveat: "HYCOM-versus-Argo comparator only. It is not independent validation of OceanEmbed because global analyses can assimilate in-situ observations.",
+  },
+  preprocessing: {
+    validCoverage: 0.8525,
+    cloudCoverage: null,
+    cloudCoverageLabel: "Unavailable: OISST is an analysed SST product; the finite-data mask is not a satellite cloud classification.",
+    inpaintingRadiusPx: 5,
+    frontMeanMagnitude: 69.8864,
+    tileCoverage: 0.79125,
+    qualityBefore: { frontPreservation: 69.8864, validArea: 0.8525 },
+    qualityAfter: { frontPreservation: 69.8864, validArea: 1 },
+  },
+  qa: {
+    action: "request_human_review",
+    traces: [{ id: "qa-curated-001", state: "escalated", timestamp: "curated run", evidence: "OpenCV 5.0.0 generated the valid-data mask, Navier–Stokes fill and Sobel fronts from the documented OISST subset.", decision: "Request human review because a calibrated OceanEmbed uncertainty field is unavailable; do not classify heat-fuel risk automatically.", before: "85.25% finite SST grid · no raw cloud classification", after: "Human-review fallback · source hashes retained" }],
+  },
+  artifacts: [
+    { label: "Curated source manifest", type: "JSON", href: "/manus-storage/curated_scene_0b5ec51d.json" },
+    { label: "Actual OISST valid-data mask", type: "PNG", href: "/manus-storage/oisst_valid_mask_3e0847f4.png" },
+    { label: "Actual Navier–Stokes inpaint", type: "PNG", href: "/manus-storage/oisst_inpainted_c99f9ec5.png" },
+    { label: "Actual Sobel SST fronts", type: "PNG", href: "/manus-storage/oisst_sobel_fronts_613a2562.png" },
+    { label: "Actual 4×4 tile coverage", type: "PNG", href: "/manus-storage/oisst_tile_coverage_4f2a1f5e.png" },
+  ],
+  layers: {
+    Temperature: "/manus-storage/oisst_sst_9ce6f15e.png",
+    "SST fronts": "/manus-storage/oisst_sobel_fronts_613a2562.png",
+    "Cloud cover": "/manus-storage/oisst_valid_mask_3e0847f4.png",
+    Uncertainty: "/manus-storage/oisst_valid_mask_3e0847f4.png",
+    "26°C depth": "/manus-storage/oisst_sst_9ce6f15e.png",
+  },
+} as const;

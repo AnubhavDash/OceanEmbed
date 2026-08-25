@@ -21,3 +21,8 @@
 - [ ] Wire QA actions, artifact persistence, threshold detection, and owner notification delivery into the completed run workflow.
 - [ ] Add integration tests for scheduled-refresh idempotency and threshold-triggered delivery.
 - [ ] Verify responsive visual behavior, run quality checks, and save a completed project checkpoint.
+- [x] Acquire a rights-cleared historical North Indian Ocean scene with documented source, date, bounds, variables, and checksum.
+- [x] Run the curated scene through actual OpenCV 5 processing and publish real mask, inpainting, front, tile, metric, and manifest artifacts as durable web assets.
+- [x] Generate, publish, and display a real 4×4 tile-coverage artifact from the curated OpenCV run.
+- [ ] Load actual curated reconstruction/uncertainty outputs and Argo validation extracts into the application’s persisted run model.
+- [ ] Execute the bounded QA and alert workflow against the curated run, preserving evidence and trace references without issuing a live owner alert.
