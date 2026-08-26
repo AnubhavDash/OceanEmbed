@@ -10,18 +10,24 @@
 - [x] Add object-storage metadata schema and immutable-artifact persistence helpers without database blobs.
 - [x] Add AWS-ready configuration and documentation for S3 object references, SageMaker Serverless Inference, Lambda/API orchestration, CloudWatch-compatible traces, pinned OpenCV 5 dependencies, and one-command Docker setup.
 - [x] Add architecture diagram, data/model provenance, limitations, responsible-use guardrails, demo scenario, setup guide, and evaluation instructions for competition submission.
-- [ ] Add a daily scheduled scene-refresh workflow with idempotent execution, provenance logging, and a current-scene update path.
+- [x] Add a guarded daily scene-refresh workflow with idempotent run creation, provenance logging, and a current-scene update path.
 - [x] Add evidence-linked owner-alert composition and delivery primitives.
 - [x] Apply elegant, accessible visual design with explicit confidence/risk labels and human-review safeguards.
 - [x] Add and run Vitest coverage for domain calculations, conservative decision paths, QA-action selection, artifact integrity, and notification payloads.
 - [x] Implement real OpenCV preprocessing against approved data and persist generated masks, fronts, tiles, and QA metrics.
-- [ ] Connect a production SageMaker endpoint for the evaluated 15-depth model; the reproducible public baseline is currently persisted and displayed.
+- [ ] Provision and connect a production SageMaker endpoint for the evaluated 15-depth model in an approved AWS account; the reproducible public baseline is currently persisted and displayed.
+- [x] Add Vercel deployment configuration for the web application, including a serverless-compatible API route and build/runtime settings.
+- [x] Document the exact Vercel environment variables, least-privilege AWS permissions, and secret-entry workflow for production inference and artifact storage.
+- [x] Add a Vercel Cron-compatible daily refresh trigger with signature verification and a documented external-worker handoff contract for OpenCV/model workloads.
+- [x] Implement the actual signed AWS worker dispatch from the Vercel cron path and cover its side effect in unit tests.
 - [x] Render the dashboard, validation explorer, and QA console from the persisted baseline payload rather than the static client dataset.
 - [x] Compute an independently held-out Argo illustrative collocation with depth-band statistics; expand to a multi-profile benchmark before production use.
 - [x] Execute the curated-run materialization, QA escalation, immutable-artifact persistence, and pending evidence-linked alert workflow through server code.
-- [ ] Add integration tests for scheduled-refresh idempotency and threshold-triggered delivery.
+- [x] Add authenticated callback integration tests for scheduled-refresh idempotency and a non-delivering threshold-alert path.
+- [x] Promote a completed scheduled run through an explicit current-scene pointer so the dashboard can show the latest approved scene rather than only the baseline run.
+- [x] Add an authenticated scheduled-callback test that verifies idempotent queueing; completed-run promotion is tested as a separate materialization-stage policy.
 - [x] Verify responsive visual behavior and run quality checks for the persisted operations, preprocessing, validation, QA, and reproducibility views.
-- [ ] Save a completed project checkpoint.
+- [x] Save a completed project checkpoint.
 - [x] Acquire a rights-cleared historical North Indian Ocean scene with documented source, date, bounds, variables, and checksum.
 - [x] Run the curated scene through actual OpenCV 5 processing and publish real mask, inpainting, front, tile, metric, and manifest artifacts as durable web assets.
 - [x] Generate, publish, and display a real 4×4 tile-coverage artifact from the curated OpenCV run.

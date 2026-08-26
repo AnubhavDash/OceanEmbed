@@ -1,0 +1,1 @@
+ALTER TABLE `pipeline_configs` ADD `latest_run_id` varchar(64);

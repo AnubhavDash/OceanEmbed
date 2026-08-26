@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { getDb } from "./db";
+import { DEFAULT_PIPELINE_CONFIG_ID, ensureNorthIndianOceanPipelineConfig, getDb, promoteCurrentScene } from "./db";
 import { artifactRefs, monitoredRegions, oceanRunPayloads, oceanRuns, qaTraces, thresholdAlerts } from "../drizzle/schema";
 
 const RUN_ID = "baseline-nio-2025-08-01-argo-location";
@@ -54,5 +54,7 @@ export async function materializeCuratedBaseline() {
     await tx.insert(qaTraces).values(materialization.qaTrace).onDuplicateKeyUpdate({ set: { rationale: materialization.qaTrace.rationale, evidence: materialization.qaTrace.evidence, beforeMetrics: materialization.qaTrace.beforeMetrics, afterMetrics: materialization.qaTrace.afterMetrics, state: materialization.qaTrace.state } });
     await tx.insert(thresholdAlerts).values(materialization.pendingAlert).onDuplicateKeyUpdate({ set: { severity: materialization.pendingAlert.severity, evidenceArtifactId: materialization.pendingAlert.evidenceArtifactId, qaTraceId: materialization.pendingAlert.qaTraceId, deliveryState: "pending" } });
   });
+  await ensureNorthIndianOceanPipelineConfig();
+  await promoteCurrentScene(DEFAULT_PIPELINE_CONFIG_ID, materialization.run.id);
   return { runId: materialization.run.id, qaTraceId: materialization.qaTrace.id, alertId: materialization.pendingAlert.id, notificationDelivery: "not_attempted" as const };
 }

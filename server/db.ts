@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import { ArtifactRef, InsertUser, NewOceanRun, PipelineConfig, artifactRefs, oceanRunPayloads, pipelineConfigs, oceanRuns, qaTraces, thresholdAlerts, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { summarizePersistedRun } from "./persistedRun";
+import { canPromoteCurrentScene } from "./currentScene";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -113,6 +114,12 @@ export async function getPipelineConfigByTaskUid(taskUid: string): Promise<Pipel
   return (await db.select().from(pipelineConfigs).where(eq(pipelineConfigs.scheduleCronTaskUid, taskUid)).limit(1))[0];
 }
 
+export async function getPipelineConfigById(id: string): Promise<PipelineConfig | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  return (await db.select().from(pipelineConfigs).where(eq(pipelineConfigs.id, id)).limit(1))[0];
+}
+
 export async function getOceanRunById(id: string) {
   const db = await getDb();
   if (!db) return undefined;
@@ -122,7 +129,9 @@ export async function getOceanRunById(id: string) {
 export async function getLatestPersistedOceanRun() {
   const db = await getDb();
   if (!db) return undefined;
-  const run = (await db.select().from(oceanRuns).where(eq(oceanRuns.status, "completed")).orderBy(desc(oceanRuns.completedAt)).limit(1))[0];
+  const configured = (await db.select().from(pipelineConfigs).where(eq(pipelineConfigs.id, DEFAULT_PIPELINE_CONFIG_ID)).limit(1))[0];
+  const promoted = configured?.latestRunId ? (await db.select().from(oceanRuns).where(eq(oceanRuns.id, configured.latestRunId)).limit(1))[0] : undefined;
+  const run = promoted ?? (await db.select().from(oceanRuns).where(eq(oceanRuns.status, "completed")).orderBy(desc(oceanRuns.completedAt)).limit(1))[0];
   if (!run) return undefined;
   const [artifacts, traces, payload] = await Promise.all([
     db.select().from(artifactRefs).where(eq(artifactRefs.runId, run.id)),
@@ -130,6 +139,16 @@ export async function getLatestPersistedOceanRun() {
     db.select().from(oceanRunPayloads).where(eq(oceanRunPayloads.runId, run.id)).limit(1),
   ]);
   return { ...summarizePersistedRun(run, artifacts, traces), payload: payload[0] ?? null };
+}
+
+export async function promoteCurrentScene(configId: string, runId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is unavailable; current scene cannot be promoted.");
+  const run = (await db.select().from(oceanRuns).where(eq(oceanRuns.id, runId)).limit(1))[0];
+  if (!run) throw new Error(`Run ${runId} does not exist.`);
+  if (!canPromoteCurrentScene(run.status)) throw new Error(`Run ${runId} with status ${run.status} cannot be promoted.`);
+  await db.update(pipelineConfigs).set({ latestRunId: runId }).where(eq(pipelineConfigs.id, configId));
+  return { configId, runId };
 }
 
 export async function createOceanRunIfAbsent(run: NewOceanRun): Promise<{ created: boolean; runId: string }> {

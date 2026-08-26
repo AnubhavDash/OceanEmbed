@@ -55,6 +55,7 @@ export const pipelineConfigs = mysqlTable("pipeline_configs", {
   enabled: int("enabled").notNull().default(0),
   dataSourceStatus: mysqlEnum("data_source_status", ["unconfigured", "ready", "degraded"]).notNull().default("unconfigured"),
   modelEndpointStatus: mysqlEnum("model_endpoint_status", ["unconfigured", "ready", "degraded"]).notNull().default("unconfigured"),
+  latestRunId: varchar("latest_run_id", { length: 64 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 }, table => [
