@@ -7,6 +7,8 @@ import { useIsMobile } from "@/hooks/useMobile";
 import { BookOpen, ChartNoAxesCombined, CircleDotDashed, LayoutDashboard, LogIn, LogOut, PanelLeft, ScanSearch, ShieldCheck, Waves } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import AnimatedContent from "./AnimatedContent";
+import Radar from "./Radar";
 import { Button } from "./ui/button";
 
 const menuItems = [
@@ -91,6 +93,6 @@ function DashboardLayoutContent({ children, setSidebarWidth }: { children: React
       </Sidebar>
       <div className={`absolute right-0 top-0 z-50 h-full w-1 cursor-col-resize transition-colors hover:bg-cyan-300/35 ${isCollapsed ? "hidden" : ""}`} onMouseDown={() => setIsResizing(true)} />
     </div>
-    <SidebarInset className="ocean-shell min-w-0">{isMobile && <div className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-white/10 bg-[#071823]/95 px-3 backdrop-blur"><SidebarTrigger className="text-slate-200" /><span className="text-sm text-slate-100">{activeLabel}</span></div>}<main className="min-h-screen">{children}</main></SidebarInset>
+    <SidebarInset className="ocean-shell min-w-0"><div className="ocean-radar" aria-hidden="true"><Radar color="#55e2e6" backgroundColor="#050d14" speed={0.09} sweepSpeed={0.32} scale={0.72} ringCount={7} spokeCount={12} ringThickness={0.035} spokeThickness={0.006} sweepWidth={4.5} falloff={2.8} brightness={0.34} enableMouseInteraction={false} /></div>{isMobile && <div className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-white/10 bg-[#071823]/95 px-3 backdrop-blur"><SidebarTrigger className="text-slate-200" /><span className="text-sm text-slate-100">{activeLabel}</span></div>}<AnimatedContent key={location} distance={20} duration={0.58} ease="power3.out" initialOpacity={0} scale={0.99} threshold={0.05} className="relative z-10"><main className="min-h-screen">{children}</main></AnimatedContent></SidebarInset>
   </>;
 }

@@ -43,3 +43,5 @@
 - [x] Verify the redesign at desktop and mobile breakpoints, including reduced-motion and accessibility behavior.
 - [x] Give the preprocessing, validation, QA, and reproducibility pages distinct route-specific visual anchors beyond the shared signal-desk frame.
 - [x] Perform explicit keyboard-focus, semantic-label, and reduced-motion verification for the redesigned interface.
+- [x] Select and integrate a React Bits ocean-appropriate animated background and primary motion treatment without reducing evidence readability.
+- [x] Verify the new visual layer across desktop/mobile, reduced-motion, tests, and Vercel production build.
