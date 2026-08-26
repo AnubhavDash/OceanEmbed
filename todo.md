@@ -37,3 +37,9 @@
 - [x] Compute and calibrate baseline uncertainty from held-out residuals without using evaluation Argo records as inference inputs.
 - [x] Package the baseline model, run manifest, evaluation report, and calibrated curated-scene prediction as immutable artifacts.
 - [x] Integrate the evaluated baseline output as the database-backed single source of truth for the dashboard state.
+- [x] Research the React Bits package and select compatible visual and motion primitives for OceanEmbed.
+- [x] Replace the generic dashboard shell with a distinctive signal-driven operations layout and React Bits motion treatment.
+- [x] Redesign the operations, OpenCV, validation, QA, and reproducibility workspaces with consistent interactive visual hierarchy.
+- [x] Verify the redesign at desktop and mobile breakpoints, including reduced-motion and accessibility behavior.
+- [x] Give the preprocessing, validation, QA, and reproducibility pages distinct route-specific visual anchors beyond the shared signal-desk frame.
+- [x] Perform explicit keyboard-focus, semantic-label, and reduced-motion verification for the redesigned interface.

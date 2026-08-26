@@ -75,7 +75,7 @@ function DashboardLayoutContent({ children, setSidebarWidth }: { children: React
         <SidebarHeader className="h-[82px] justify-center px-3">
           <div className="flex w-full items-center gap-3">
             <button onClick={toggleSidebar} aria-label="Toggle navigation" className="icon-button"><PanelLeft size={17} /></button>
-            {!isCollapsed && <div className="min-w-0"><div className="flex items-center gap-2"><div className="brand-mark"><Waves size={17} /></div><span className="font-semibold tracking-tight text-white">OceanEmbed</span></div><p className="mt-1 pl-9 text-[10px] uppercase tracking-[0.16em] text-cyan-200/55">Decision support</p></div>}
+            {!isCollapsed && <div className="min-w-0"><div className="flex items-center gap-2"><div className="brand-mark"><Waves size={17} /></div><span className="brand-wordmark">OceanEmbed</span></div><p className="mt-1 pl-9 text-[10px] uppercase tracking-[0.19em] text-cyan-200/55">Signal desk</p></div>}
           </div>
         </SidebarHeader>
         <SidebarContent className="pt-5">
@@ -83,7 +83,7 @@ function DashboardLayoutContent({ children, setSidebarWidth }: { children: React
           <SidebarMenu className="px-3">
             {menuItems.map(item => <SidebarMenuItem key={item.path}><SidebarMenuButton isActive={location === item.path} onClick={() => setLocation(item.path)} tooltip={item.label} className="ocean-nav-item h-11"><item.icon size={17} /><span>{item.label}</span></SidebarMenuButton></SidebarMenuItem>)}
           </SidebarMenu>
-          <div className="mx-4 mt-8 rounded-xl border border-cyan-200/10 bg-cyan-300/[0.045] p-3 group-data-[collapsible=icon]:hidden"><div className="flex items-center gap-2 text-xs font-medium text-cyan-100"><CircleDotDashed size={14} className="text-cyan-300" /> Curated historical scene</div><p className="mt-1.5 text-[11px] leading-5 text-slate-400">Real OISST, Argo, HYCOM and OpenCV 5 evidence; visibly separated from live operations.</p></div>
+          <div className="scene-sentinel mx-4 mt-8 p-3 group-data-[collapsible=icon]:hidden"><div className="flex items-center gap-2 text-xs font-medium text-cyan-100"><CircleDotDashed size={14} className="text-cyan-300" /> Evidence mode</div><p className="mt-1.5 text-[11px] leading-5 text-slate-400">Curated OISST, Argo, HYCOM and OpenCV 5 signal bundle. Never presented as live operations.</p><div className="sentinel-line" /></div>
         </SidebarContent>
         <SidebarFooter className="p-3">
           {user ? <DropdownMenu><DropdownMenuTrigger asChild><button className="flex w-full items-center gap-3 rounded-xl p-2 text-left hover:bg-white/[0.05]"><Avatar className="h-8 w-8 border border-white/10"><AvatarFallback className="bg-cyan-300/10 text-xs text-cyan-100">{user.name?.charAt(0).toUpperCase() ?? "O"}</AvatarFallback></Avatar><div className="min-w-0 group-data-[collapsible=icon]:hidden"><p className="truncate text-xs text-slate-200">{user.name || "Project owner"}</p><p className="mt-0.5 truncate text-[10px] text-slate-500">Owner controls</p></div></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onClick={logout}><LogOut size={14} className="mr-2" /> Sign out</DropdownMenuItem></DropdownMenuContent></DropdownMenu> : <Button onClick={() => startLogin()} variant="outline" className="w-full border-white/10 bg-white/[0.03] text-xs text-slate-300 hover:bg-white/[0.08] group-data-[collapsible=icon]:px-2"><LogIn size={14} /><span className="group-data-[collapsible=icon]:hidden">Owner sign in</span></Button>}

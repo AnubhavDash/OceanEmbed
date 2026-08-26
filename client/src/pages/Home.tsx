@@ -1,4 +1,6 @@
 import { MapView } from "@/components/Map";
+import BlurText from "@/components/BlurText";
+import Magnet from "@/components/Magnet";
 import { CURATED_SCENE } from "@/lib/curatedScene";
 import { trpc } from "@/lib/trpc";
 import { AlertTriangle, CheckCircle2, ChevronRight, Cloud, Database, FileCheck2, Gauge, Layers3, Loader2, MapPin, RefreshCw, ScanSearch, ShieldCheck, ThermometerSun, Waves, Wind } from "lucide-react";
@@ -25,15 +27,15 @@ function usePersistedBaseline() {
 
 function Header({ title, subtitle }: { title: string; subtitle: string }) {
   const { data: persistedRun } = trpc.oceanembed.persistedLatest.useQuery();
-  return <header className="workspace-header"><div><p className="eyebrow">North Indian Ocean · operational intelligence</p><h1 className="page-title">{title}</h1><p className="page-subtitle">{subtitle}</p></div><div className="header-status"><span className="live-dot" /> {persistedRun ? `Persisted run · ${persistedRun.immutableArtifactCount} artifacts` : "Loading persisted run"} <span>/</span> 01 Aug 2025</div></header>;
+  return <header className="workspace-header"><div className="header-copy"><p className="eyebrow"><span className="eyebrow-pulse" />North Indian Ocean · operational intelligence</p><h1 className="sr-only">{title}</h1><BlurText text={title} className="page-title signal-title" animateBy="words" direction="top" delay={55} stepDuration={0.18} animationFrom={{ opacity: 0, y: -12 }} animationTo={[{ opacity: 0.72, y: 2 }, { opacity: 1, y: 0 }]} /><p className="page-subtitle">{subtitle}</p></div><Magnet padding={60} magnetStrength={10} wrapperClassName="header-magnet"><div className="header-status"><span className="live-dot" /> {persistedRun ? `Evidence locked · ${persistedRun.immutableArtifactCount} artifacts` : "Syncing run payload"} <span className="status-divider">/</span> 01 Aug 2025</div></Magnet></header>;
 }
 
 function ReferenceNotice({ text }: { text: string }) { return <div className="reference-notice"><AlertTriangle size={15} />{text}</div>; }
 function LoadingState() { return <div className="grid min-h-[70vh] place-items-center"><div className="text-center"><Loader2 className="mx-auto mb-3 animate-spin text-cyan-300" /><p className="text-sm text-slate-400">Loading persisted operations payload…</p></div></div>; }
 function DataUnavailable() { return <div className="workspace"><Header title="Persisted run unavailable" subtitle="The curated display requires a completed database-backed run payload." /><ReferenceNotice text="No persisted run payload is available. The static source assets are intentionally not used as a substitute for operation decisions." /></div>; }
 function Tag({ value }: { value: string }) { return <span className={`tag tag-${confidenceTone[value] ?? "moderate"}`}>{value}</span>; }
-function Panel({ children, className = "" }: { children: React.ReactNode; className?: string }) { return <article className={`panel ${className}`}>{children}</article>; }
-function Section({ eyebrow, title, children, action }: { eyebrow: string; title: string; children: React.ReactNode; action?: React.ReactNode }) { return <Panel><div className="section-head"><div><p className="eyebrow">{eyebrow}</p><h2>{title}</h2></div>{action}</div>{children}</Panel>; }
+function Panel({ children, className = "" }: { children: React.ReactNode; className?: string }) { return <article className={`panel signal-panel ${className}`}><span className="panel-corner panel-corner-tl" /><span className="panel-corner panel-corner-br" />{children}</article>; }
+function Section({ eyebrow, title, children, action }: { eyebrow: string; title: string; children: React.ReactNode; action?: React.ReactNode }) { const anchor = `section-${eyebrow.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`; return <Panel className={anchor}><div className="section-head"><div><p className="eyebrow">{eyebrow}</p><h2>{title}</h2></div>{action}</div><div className="section-signal" />{children}</Panel>; }
 
 function Profile({ points, observed = false }: { points: ProfilePoint[]; observed?: boolean }) {
   const path = points.map((point, index) => { const x = 46 + ((point.temperatureC - 2) / 30) * 230; const y = 15 + point.depthM / 1000 * 218; return `${index ? "L" : "M"}${x},${y}`; }).join(" ");
