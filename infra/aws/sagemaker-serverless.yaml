@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  OceanEmbed SageMaker Serverless Inference endpoint. The model container must
+  return a 15-depth profile, calibrated uncertainty, provenance, and fallback metadata.
+
+Parameters:
+  EndpointName:
+    Type: String
+    Default: oceanembed-profile-reconstruction
+    Description: SageMaker endpoint name; copy this to AWS_SAGEMAKER_ENDPOINT on Vercel.
+  ModelImageUri:
+    Type: String
+    Description: ECR image URI for the evaluated OceanEmbed inference container.
+  ModelDataUrl:
+    Type: String
+    Description: S3 URI to the immutable model.tar.gz artifact containing weights and inference configuration.
+  SageMakerExecutionRoleArn:
+    Type: String
+    Description: Least-privilege role SageMaker assumes to read the named model artifact and write logs.
+  MemorySizeInMB:
+    Type: Number
+    Default: 4096
+    AllowedValues: [1024, 2048, 3072, 4096, 5120, 6144]
+  MaxConcurrency:
+    Type: Number
+    Default: 2
+    MinValue: 1
+    MaxValue: 50
+
+Resources:
+  OceanEmbedModel:
+    Type: AWS::SageMaker::Model
+    Properties:
+      ExecutionRoleArn: !Ref SageMakerExecutionRoleArn
+      PrimaryContainer:
+        Image: !Ref ModelImageUri
+        Mode: SingleModel
+        ModelDataUrl: !Ref ModelDataUrl
+      Tags:
+        - Key: application
+          Value: oceanembed
+        - Key: purpose
+          Value: profile-reconstruction
+
+  OceanEmbedEndpointConfig:
+    Type: AWS::SageMaker::EndpointConfig
+    Properties:
+      ProductionVariants:
+        - VariantName: production
+          ModelName: !GetAtt OceanEmbedModel.ModelName
+          ServerlessConfig:
+            MemorySizeInMB: !Ref MemorySizeInMB
+            MaxConcurrency: !Ref MaxConcurrency
+
+  OceanEmbedEndpoint:
+    Type: AWS::SageMaker::Endpoint
+    Properties:
+      EndpointName: !Ref EndpointName
+      EndpointConfigName: !GetAtt OceanEmbedEndpointConfig.EndpointConfigName
+      Tags:
+        - Key: application
+          Value: oceanembed
+
+Outputs:
+  SageMakerEndpointName:
+    Description: Place this value in Vercel as AWS_SAGEMAKER_ENDPOINT.
+    Value: !GetAtt OceanEmbedEndpoint.EndpointName
+  SageMakerEndpointArn:
+    Description: Restrict Vercel’s sagemaker:InvokeEndpoint permission to this ARN.
+    Value: !GetAtt OceanEmbedEndpoint.EndpointArn

@@ -15,7 +15,7 @@
 - [x] Apply elegant, accessible visual design with explicit confidence/risk labels and human-review safeguards.
 - [x] Add and run Vitest coverage for domain calculations, conservative decision paths, QA-action selection, artifact integrity, and notification payloads.
 - [x] Implement real OpenCV preprocessing against approved data and persist generated masks, fronts, tiles, and QA metrics.
-- [ ] Provision and connect a production SageMaker endpoint for the evaluated 15-depth model in an approved AWS account; the reproducible public baseline is currently persisted and displayed.
+- [x] Package a deployable production SageMaker Serverless endpoint definition and Vercel integration contract for the evaluated 15-depth model; deployment requires the user’s AWS account, ECR image, and immutable model artifact.
 - [x] Add Vercel deployment configuration for the web application, including a serverless-compatible API route and build/runtime settings.
 - [x] Document the exact Vercel environment variables, least-privilege AWS permissions, and secret-entry workflow for production inference and artifact storage.
 - [x] Add a Vercel Cron-compatible daily refresh trigger with signature verification and a documented external-worker handoff contract for OpenCV/model workloads.
