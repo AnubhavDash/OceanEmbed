@@ -1,7 +1,45 @@
+# OceanEmbed Docker Compose
+# Includes: OpenCV 5 preprocessing worker, Convformer inference server, and training runner
+# Build: docker compose -f infra/docker-compose.opencv.yml up --build
+# Deploy to AWS: docker compose -f infra/docker-compose.opencv.yml push
+
 services:
   opencv-worker:
     build:
       context: ./opencv-worker
+      dockerfile: Dockerfile
       args:
         OPENCV_VERSION: "5.0.0"
     image: oceanembed-opencv-worker:5.0.0
+    volumes:
+      - ./data:/data
+    command: python preprocess_worker.py --input /data/raw --output /data/processed
+    environment:
+      - PYTHONPATH=/app
+
+  inference:
+    build:
+      context: .
+      dockerfile: infra/opencv-worker/Dockerfile
+    image: oceanembed-inference:1.0.0
+    volumes:
+      - ./models:/models:ro
+      - ./data:/data
+    ports:
+      - "8080:8080"
+    command: python infra/opencv-worker/inference_server.py --model /models/convformer.onnx --port 8080
+    environment:
+      - OCEONEMBED_MODEL_PATH=/models/convformer.onnx
+      - PYTHONPATH=/app
+
+  trainer:
+    build:
+      context: .
+      dockerfile: infra/opencv-worker/Dockerfile
+    image: oceanembed-trainer:1.0.0
+    volumes:
+      - ./data:/data
+      - ./models:/models
+    command: python model/train.py --s3-bucket oceanembed-training --epochs 100 --batch-size 32 --lr 1e-4 --output-dir /models --use-sagemaker
+    environment:
+      - PYTHONPATH=/app
